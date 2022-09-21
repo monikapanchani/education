@@ -1,5 +1,12 @@
+import { SnackbarProvider } from 'notistack';
 import React from 'react';
+import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
+// import { TheameProvider } from "./context/themeContext";
+// import Public from "./PublicRoute/Public";
+// import Private from "./PrivateRoute/Private";
+import { persistor, store } from "./reduxsaga/store";
+import { PersistGate } from 'redux-persist/integration/react'
 import About from './Container/About/AboutTeam';
 import AboutUnivarcity from './Container/About/AboutUnivarcity';
 import Blog from './Container/Blog/Blog';
@@ -13,20 +20,27 @@ import Login from './Container/Login/Login';
 
 function App(props) {
   return (
-    <div>
-      <Header />
-      <Switch>
-      <Route  exact path={"/"} component={Home}/>
-      <Route exact path={"/AboutTeam"} component={About}/>
-      <Route exact path={"/AboutUnivarcity"} component={AboutUnivarcity}/>
-      <Route exact path={"/Courses"} component={Course} />
-      <Route exact path={"/blog"} component={Blog} />
-      <Route exact path={"/Contact"} component={Contact} />
-      <Route exact path={"/login"} component={Login} />
-      </Switch>
-      <Footer/>
-    </div>
-  )
+    <>
+
+      <SnackbarProvider maxSnack={3}>
+        <Provider store={store}>
+          {/* <PersistGate loading={null} persistor={persistor}> */}
+              <Header />
+              <Switch>
+                <Route exact path={"/"} component={Home} />
+                <Route exact path={"/AboutTeam"} component={About} />
+                <Route exact path={"/AboutUnivarcity"} component={AboutUnivarcity} />
+                <Route exact path={"/Courses"} component={Course} />
+                <Route exact path={"/blog"} component={Blog} />
+                <Route exact path={"/Contact"} component={Contact} />
+                <Route exact path={"/login"} component={Login} />
+              </Switch>
+              <Footer />
+          {/* </PersistGate> */}
+        </Provider>
+        </SnackbarProvider >
+      </>
+      );
  }
 
-export default App
+      export default App;

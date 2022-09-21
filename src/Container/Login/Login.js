@@ -1,84 +1,247 @@
-import React from 'react';
+import React, { useState } from 'react';
+import * as yup from 'yup';
+import { useDispatch } from 'react-redux'
+import { Form, Formik, useFormik } from 'formik';
+import { ForgotPasswordAction, GoogleLoginAction, singinAction, singupAction } from '../../reduxsaga/action/action';
+
+
 
 function Login(props) {
+
+
+
+    const [usertype, Setusertype] = useState('Login');
+    const [password, setpassword] = useState(false);
+
+    const handleGoggleLogin=()=>{
+        dispatch(GoogleLoginAction())
+    }
+const HandlePassword=(values)=>{
+    console.log(values);
+    dispatch(ForgotPasswordAction(values))
+}
+    // const handleForgotPassword=(values)=>{
+    //     console.log(values);
+    //     dispatch(ForgotPasswordAction(values))
+    // }
+
+    const dispatch = useDispatch();
+
+    let LoginSchema, initVal;
+
+    if (usertype == 'Login') {
+        LoginSchema = {
+            email: yup.string().email("Invalid email address format").required("Email is required"),
+            password: yup.string().required("Password is required")
+        };
+        initVal = {
+            email: '',
+            password: ''
+        }
+    } else if (usertype == 'Signup') {
+        LoginSchema = {
+            name: yup.string().required("name is required"),
+            email: yup.string().email("Invalid email address format").required("Email is required"),
+            password: yup.string().required("Password is required")
+        };
+        initVal = {
+            name: '',
+            email: '',
+            password: ''
+        }
+    } else if (password){
+        LoginSchema =
+            { email: yup.string().email("Invalid email address format").required("Email is required") }
+        initVal = {
+            email: ''
+        }
+    }
+
+    let Schema = yup.object().shape(LoginSchema);
+
+    let handleLogin=(values)=>{
+        // localStorage.setItem('user', '123')
+        dispatch(singinAction(values))
+    }
+
+
+    const formikobj = useFormik({
+        initialValues: initVal,
+        validationSchema: Schema,
+        onSubmit: (values) => {
+            console.log(values);
+            if(usertype === 'Login' && !password){
+                handleLogin(values);
+            }else if(usertype === 'Signup' && !password){
+                // alert(JSON.stringify(values, null, 2));
+                dispatch(singupAction(values))
+               
+            }else if(password === true){
+               HandlePassword(values)
+            }
+
+        },
+    });
+
+    const { errors, handleChange, handleSubmit, handleBlur, touched } = formikobj;
+
+
     return (
-        <div>
-            <main>
-                {/* slider */}
-                <section className="slider-bg">
-                    <div className="slider-overlay" />
-                    <div className="slider-caption text-light">
-                        {/* <h1 class="fw-normal mb-0">About</h1>
-      <p class="fs-4">Home - About</p> */}
-                        <nav aria-label="breadcrumb">
-                            <ol className="breadcrumb">
-                                <li className="breadcrumb-item active text-white fs-1" aria-current="page">Login</li>
-                            </ol>
-                        </nav>
-                        <nav aria-label="breadcrumb">
-                            <ol className="breadcrumb">
-                                <li className="breadcrumb-item"><a href="index.html" className="text-white">Home</a></li>
-                                <li className="breadcrumb-item active text-white" aria-current="page">Login</li>
-                            </ol>
-                        </nav>
-                    </div>
-                </section>
-                {/* login */}
-                <section className="login-page py-100">
-                    <div className="container">
-                        <div className="row">
-                            <div className="log-part p-5 d-lg-flex ">
-                                <div className="col-12 col-lg-6 ms-0 ms-xl-5 py-100 border-end">
-                                    <h4 className="mb-5">Log in with social media</h4>
-                                    <div className="log-social ps-5 d-flex">
-                                        <ul className="list-unstyled me-5">
-                                            <li>
-                                                <a href="https://www.facebook.com/login/" className="text-decoration-none"><i className="fab fa-facebook-f me-4 mb-3" />Login with Facebook</a>
-                                            </li>
-                                            <li>
-                                                <a href="https://www.facebook.com/login/" className="text-decoration-none"><i className="fab fa-google me-3 mb-3" />Login with Facebook</a>
-                                            </li>
-                                            <li>
-                                                <a href="https://www.facebook.com/login/" className="text-decoration-none"><i className="fab fa-linkedin-in me-3 mb-3" />Login with Facebook</a>
-                                            </li>
-                                            <li>
-                                                <a href="https://www.facebook.com/login/" className="text-decoration-none"><i className="fab fa-twitter me-3 mb-3" />Login with Facebook</a>
-                                            </li>
-                                        </ul>
-                                        <div className="col-1 py-5 ms-5">
-                                            <h4 className="ms-5">or</h4>
+        <section id="appointment" className="appointment">
+            <div className="container">
+                <div className="section-title">
+                    {
+                        password ?
+                            <h2>Forgot Password</h2>
+                            :
+                            usertype === 'Login' ?
+                                <h2>Login</h2>
+                                :
+                                <h2>Signup</h2>
+                    }
+
+                </div >
+                <Formik values={formikobj}>
+                    <Form mathod="post" onSubmit={handleSubmit} className="php-email-form">
+                        <div className='box'>
+                            <div className="row justify-content-center">
+
+                                {
+                                    usertype === 'Signup' ?
+                                        <div className="col-md-4 form-group">
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                className="form-control"
+                                                id="name"
+                                                placeholder="Your Name"
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                            />
+                                            {errors.name && touched.name ? (
+                                                <p>{errors.name}</p>
+                                            ) : (
+                                                ""
+                                            )}
                                         </div>
-                                    </div>
-                                </div>
-                                <div className="col-12 col-lg-6 account ms-5">
-                                    <h4>Log in with account</h4>
-                                    <p>Not a member yet?<a href="sign-up.html" className="ms-2">Sign up Free</a></p>
-                                    <form className="w-75 my-5 form">
-                                        <div className="mb-4">
-                                            <label htmlFor="exampleInputEmail1" className="form-label">Username or email *</label>
-                                            <input type="email" className="form-control py-3" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email or Username" />
-                                        </div>
-                                        <div className="mb-4">
-                                            <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
-                                            <input type="password" className="form-control py-3" id="exampleInputPassword1" placeholder="Password" />
-                                        </div>
-                                        <div className="mb-4 form-check">
-                                            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                                            <label className="form-check-label" htmlFor="exampleCheck1">Remember me</label>
-                                        </div>
-                                        <button type="submit" className="col-12 btn btn-primary px-5 py-2">Login<i aria-hidden="true" className="fas fa-arrow-right ps-2" /></button>
-                                        <p className="pass my-4">
-                                            <a href="password.html" className="text-decoration-none">Lost your password?</a>
-                                        </p>
-                                    </form>
+                                        :
+                                        null
+                                }
+                            </div>
+                            <div className="row justify-content-center">
+                                <div className="col-md-4 form-group mt-3 mt-md-0">
+                                    <input
+                                        type="email"
+                                        className="form-control"
+                                        name="email"
+                                        id="email"
+                                        placeholder="Your Email"
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                    />
+                                    {errors.email && touched.email ? (
+                                        <p>{errors.email}</p>
+                                    ) : (
+                                        ""
+                                    )}
+                                    <div className="validate" />
                                 </div>
                             </div>
+                            <div className="row justify-content-center">
+                                {
+                                    password ?
+                                        null : <div className="col-md-4 form-group mt-3 mt-md-0">
+                                            <input
+                                                type="password"
+                                                className="form-control"
+                                                name="password"
+                                                id="password"
+                                                placeholder="Your password"
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                            />
+                                            {errors.password && touched.password ? (
+                                                <p>{errors.password}</p>
+                                            ) : (
+                                                ""
+                                            )}
+                                            <div className="validate" />
+                                        </div>
+                                }
+                            </div>
+                            <div className='text-align-center'>
+                                {
+                                    usertype === 'Login' && password === false ?
+                                        <>
+                                            <a
+                                                type="submit"
+                                                onClick={() => Setusertype('Signup')}>
+                                                Create an account ?
+                                            </a><br />
+                                            <a
+                                                type="submit"
+                                                onClick={() => setpassword(true)}>
+                                                Forgot Password ?
+                                            </a>
+                                        </>
+                                        :
+                                        password === true ?
+                                            <a
+                                                type="submit"
+                                                onClick={() => setpassword(false)}>
+                                                Remember your password !
+                                            </a>
+                                            :
+                                            <a
+                                                type="submit"
+                                                onClick={() => Setusertype('Login')}>
+                                                Already an account ?
+                                            </a>
+                                }
+                            </div>
                         </div>
-                    </div>
-                </section>
-            </main>
 
-        </div>
+
+                        <div className="row">
+                            {
+                                password ?
+                                    <div
+                                        className="text-center">
+                                        <button type="submit">
+                                            Forgot Password
+                                        </button>
+                                    </div>
+                                    :
+                                    usertype === 'Login' ?
+                                        <div
+                                            className="text-center">
+                                            <button
+                                                type="submit">
+                                                Login
+                                            </button>
+                                        </div>
+                                        :
+                                        <div
+                                            className="text-center">
+                                            <button
+                                                type="submit">
+                                                Signup
+                                            </button>
+                                        </div>
+                            }
+                             <div
+                                            className="text-center">
+                                            <button
+                                                type="submit" onClick={()=>handleGoggleLogin()}>
+                                                Google Signin
+                                            </button>
+                                        </div>
+                        </div>
+                    </Form>
+                </Formik>
+            </div>
+        </section>
+
     );
 }
 

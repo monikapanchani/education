@@ -1,8 +1,19 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { useDispatch, useSelector } from "react-redux";
+import { LogoutAction } from "../../reduxsaga/action/action";
+import Alert from '../../Component/Alert';
 
 function Header(props) {
+
+  const user = useSelector(state => state.auth)
+  const dispatch = useDispatch()
+
+  const handleLogout = () =>{
+    dispatch(LogoutAction())
+  }
+
     return (
         <header>
   <div className="top-bar bg-dark py-3">
@@ -77,7 +88,7 @@ function Header(props) {
               </NavDropdown.Item>
             </NavDropdown>
           <li className="nav-item px-1">
-            <NavLink exact className="nav-link scrollto" to={"/Courses"}>Courses</NavLink>
+            <NavLink exact className="nav-link scrollto" to={"/Courses"}>categories</NavLink>
 
           </li>
           {/* <li class="nav-item">
@@ -94,8 +105,23 @@ function Header(props) {
             <a className="nav-link" href="#"><i className="fas fa-search" /></a>
             
           </li>
+          <Alert/>
           <li className="nav-item login">
-            <NavLink  exact className="nav-link pe-0" scrollto to={"/login"}><i className="far fa-user" /></NavLink>
+            {/* <NavLink  exact className="nav-link pe-0" scrollto to={"/login"}><i className="far fa-user" /></NavLink> */}
+
+            {
+                user.user === null ?
+                <NavLink to={"/login"} className="appointment-btn scrollto">
+                {" "}
+                <span className="d-none d-md-inline">Login/ Signup</span>
+              </NavLink> :
+               <NavLink to={"/login"} className="appointment-btn scrollto " onClick={()=>handleLogout()}>
+               {" "}
+               <span className="d-none d-md-inline">Logout</span>
+             </NavLink> 
+
+
+            }
           </li>
         </ul>
       </div>

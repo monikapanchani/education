@@ -44,6 +44,36 @@ function Course(props) {
             <img src="assets/images/pak6.jpg" className="img-fluid m-2" />
           </div>
         </div>
+        <div className="blog-right-box border mb-4">
+            <div className="recent-post-head border-bottom">
+              <h4 className="fw-bold pb-2">Categories</h4>
+            </div>
+            <div className="recent-list">
+              <ul className="list-unstyled px-2">
+                <li className="py-3 border-bottom">
+                  <a href="#" className="text-decoration-none text-dark">Web Design <span> (9)</span></a>
+                </li>
+                <li className="py-3 border-bottom">
+                  <a href="#" className="text-decoration-none text-dark">App Design <span> (3) </span></a>
+                </li>
+                <li className="py-3 border-bottom">
+                  <a href="#" className="text-decoration-none text-dark">Graphic Design <span> (23)</span></a>
+                </li>
+                <li className="py-3 border-bottom">
+                  <a href="#" className="text-decoration-none text-dark">Game Design <span> (5)</span></a>
+                </li>
+                <li className="py-3 border-bottom">
+                  <a href="#" className="text-decoration-none text-dark">UI-UX  Design <span> (7)</span></a>
+                </li>
+                <li className="py-3 border-bottom">
+                  <a href="#" className="text-decoration-none text-dark">Print Design <span> (2)</span></a>
+                </li>
+                <li className="py-3">
+                  <a href="#" className="text-decoration-none text-dark">Logo Design <span> (5)</span></a>
+                </li>
+              </ul>
+            </div>
+          </div>
       </div>
     </div>
   </section>
