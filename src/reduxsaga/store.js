@@ -25,3 +25,10 @@ export const store = createStore(
 export let persistor = persistStore(store);
 
 sagaMiddleware.run(rootsaga);
+
+
+export const configStore = () => {
+    let store = createStore(persistedReducer, applyMiddleware(thunk));
+    let persistor = persistStore(store)
+    return { store, persistor }
+}

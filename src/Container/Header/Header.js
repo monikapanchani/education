@@ -103,8 +103,8 @@ function Header(props) {
           </li>
           <li className="nav-item login ms-4">
             <a className="nav-link" href="#"><i className="fas fa-search" /></a>
-            
           </li>
+          
           <Alert/>
           <li className="nav-item login">
             {/* <NavLink  exact className="nav-link pe-0" scrollto to={"/login"}><i className="far fa-user" /></NavLink> */}
